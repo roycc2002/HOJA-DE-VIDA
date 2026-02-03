@@ -8,5 +8,7 @@ urlpatterns = [
     path('academicos/', views.academicos, name='academicos'),
     path('laborales/', views.laborales, name='laborales'),
     path('venta-garaje/', views.venta_garaje, name='venta_garaje'),
-    path('descargar-pdf/', views.descargar_pdf, name='pdf'),
+    
+    # Aquí estaba el error. Ahora apuntamos correctamente a 'views.pdf'
+    path('descargar-pdf/', views.pdf, name='pdf'),
 ]

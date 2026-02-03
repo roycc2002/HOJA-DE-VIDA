@@ -18,3 +18,30 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+    # --- NUEVOS MODELOS ---
+
+class Formacion(models.Model):
+    titulo = models.CharField(max_length=100)  # Ej: Tecnología en TI
+    institucion = models.CharField(max_length=100) # Ej: ULEAM
+    descripcion = models.TextField(blank=True) # Ej: En curso
+    fecha = models.CharField(max_length=50, blank=True) # Ej: 2023 - Presente
+
+    def __str__(self):
+        return self.titulo
+
+class Trabajo(models.Model):
+    cargo = models.CharField(max_length=100) # Ej: Técnico Automotriz
+    empresa = models.CharField(max_length=100) # Ej: Taller X
+    descripcion = models.TextField() # Lo que hacías ahí
+    fecha = models.CharField(max_length=50) 
+
+    def __str__(self):
+        return self.cargo
+
+class ExperienciaGeneral(models.Model):
+    tipo = models.CharField(max_length=100) # Ej: Prácticas, Voluntariado
+    descripcion = models.TextField()
+
+    def __str__(self):
+        return self.tipo

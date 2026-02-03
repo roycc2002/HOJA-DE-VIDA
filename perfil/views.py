@@ -1,89 +1,80 @@
-import os
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.conf import settings
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-from django.contrib.staticfiles import finders
-from .models import Certificado, Producto
+# IMPORTANTE: Aquí importamos todos tus modelos (los viejos y los nuevos)
+from .models import Certificado, Producto, Formacion, Trabajo, ExperienciaGeneral
 
-# --- TUS VISTAS NORMALES ---
 def home(request):
-    return render(request, "home.html")
+    return render(request, 'home.html')
 
 def experiencia(request):
-    return render(request, "experiencia.html")
+    # Trae los datos de la tabla ExperienciaGeneral
+    experiencias = ExperienciaGeneral.objects.all()
+    return render(request, 'experiencia.html', {'experiencias': experiencias})
 
 def cursos(request):
     certificados = Certificado.objects.all()
-    return render(request, "cursos.html", {"certificados": certificados})
+    return render(request, 'cursos.html', {'certificados': certificados})
 
 def academicos(request):
-    return render(request, "academicos.html")
+    # Trae los datos de la tabla Formacion
+    estudios = Formacion.objects.all()
+    return render(request, 'academicos.html', {'estudios': estudios})
 
 def laborales(request):
-    return render(request, "laborales.html")
+    # Trae los datos de la tabla Trabajo
+    trabajos = Trabajo.objects.all()
+    return render(request, 'laborales.html', {'trabajos': trabajos})
 
 def venta_garaje(request):
-    return render(request, 'venta_garaje.html')
+    productos = Producto.objects.all()
+    return render(request, 'venta_garaje.html', {'productos': productos})
 
-# --- GENERADOR DE PDF "A LA CARTA" ---
-def descargar_pdf(request):
-    # 1. Verificamos qué casillas marcó el usuario.
-    # Si llega algo en request.GET, usamos eso. Si no, activamos todo por defecto.
-    if request.GET:
-        ver_perfil = request.GET.get('check_perfil')
-        ver_experiencia = request.GET.get('check_experiencia')
-        ver_formacion = request.GET.get('check_formacion')
-        ver_cursos = request.GET.get('check_cursos')
-        ver_venta = request.GET.get('check_venta')
-    else:
-        # Si alguien entra directo al link sin formulario, mostramos todo
-        ver_perfil = 'on'
-        ver_experiencia = 'on'
-        ver_formacion = 'on'
-        ver_cursos = 'on'
-        ver_venta = 'on'
+def pdf(request):
+    # 1. Verificamos qué casillas marcó el usuario en el menú lateral
+    # Si marcó el checkbox, la variable será True
+    mostrar_perfil = request.GET.get('check_perfil') == 'on'
+    mostrar_experiencia = request.GET.get('check_experiencia') == 'on'
+    mostrar_formacion = request.GET.get('check_formacion') == 'on'
+    mostrar_cursos = request.GET.get('check_cursos') == 'on'
+    mostrar_venta = request.GET.get('check_venta') == 'on'
 
-    # 2. Buscamos datos en la BD solo si el usuario pidió esas secciones
-    certificados = Certificado.objects.all() if ver_cursos else None
-    productos = Producto.objects.all() if ver_venta else None
-    
-    # 3. Empaquetamos todo para enviarlo al HTML
-    data = {
-        'ver_perfil': ver_perfil,
-        'ver_experiencia': ver_experiencia,
-        'ver_formacion': ver_formacion,
-        'certificados': certificados, 
-        'productos': productos
+    # 2. Traemos TODA la información de la base de datos
+    certificados = Certificado.objects.all()
+    productos = Producto.objects.all()
+    estudios = Formacion.objects.all()
+    trabajos = Trabajo.objects.all()
+    experiencias = ExperienciaGeneral.objects.all()
+
+    # 3. Empaquetamos todo en el contexto para enviarlo al HTML del PDF
+    context = {
+        'mostrar_perfil': mostrar_perfil,
+        'mostrar_experiencia': mostrar_experiencia,
+        'mostrar_formacion': mostrar_formacion,
+        'mostrar_cursos': mostrar_cursos,
+        'mostrar_venta': mostrar_venta,
+        
+        # Datos de la BD
+        'certificados': certificados,
+        'productos': productos,
+        'estudios': estudios,
+        'trabajos': trabajos,
+        'experiencias': experiencias,
     }
-    
-    template = get_template('cv_pdf.html')
-    html = template.render(data)
-    
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="Hoja_Vida_Juan_Roy.pdf"'
 
-    pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
+    # 4. Renderizamos el PDF
+    template_path = 'cv_pdf.html' # Asegúrate de tener este archivo HTML creado para el diseño del PDF
+    template = get_template(template_path)
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    # 'inline' hace que se abra en el navegador, 'attachment' lo descarga directo
+    response['Content-Disposition'] = 'inline; filename="mi_hoja_de_vida.pdf"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
 
     if pisa_status.err:
-       return HttpResponse('Error al generar PDF: <pre>' + html + '</pre>')
+        return HttpResponse('Hubo un error al generar el PDF <pre>' + html + '</pre>')
+    
     return response
-
-# --- FUNCIÓN DE IMÁGENES (No tocar) ---
-def link_callback(uri, rel):
-    if uri.startswith(settings.MEDIA_URL):
-        path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
-    elif uri.startswith(settings.STATIC_URL):
-        s_url = settings.STATIC_URL 
-        s_path = uri.replace(s_url, "") 
-        path = finders.find(s_path)
-        if not path:
-             path = os.path.join(settings.STATIC_ROOT, s_path)
-    else:
-        path = uri
-
-    if not os.path.isfile(path):
-        print("ERROR PDF: No se encuentra la imagen en: " + str(path))
-        return None 
-    return path

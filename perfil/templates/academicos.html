@@ -1,36 +1,16 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Formación Académica</title>
+    <title>Académicos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background:#f4f6f9; }
-        .sidebar {
-            width: 230px;
-            background:#1f2933;
-            min-height:100vh;
-            position:fixed;
-            color:white;
-        }
-        .sidebar a {
-            color:#cbd5e1;
-            display:block;
-            padding:10px 15px;
-            text-decoration:none;
-        }
+        .sidebar { width: 230px; background: #1f2933; min-height: 100vh; position: fixed; color: white; top:0; left:0; }
+        .sidebar a { color:#cbd5e1; display:block; padding:10px 15px; text-decoration:none; }
         .sidebar a:hover { background:#2563eb; color:white; }
         .content { margin-left:250px; padding:20px; }
-        .card { border-radius:15px; }
-        .badge-edu {
-            background:#2563eb;
-            padding:6px 12px;
-            border-radius:20px;
-            color:white;
-            font-size:12px;
-        }
     </style>
 </head>
 <body>
@@ -43,50 +23,52 @@
     <a href="{% url 'academicos' %}">Académicos</a>
     <a href="{% url 'laborales' %}">Laborales</a>
     <a href="{% url 'venta_garaje' %}">Venta de Garaje</a>
-    <a href="{% url 'pdf' %}" class="btn btn-success m-2">DESCARGAR PDF</a>
-    
 
-
+    <div style="padding: 15px; margin-top: 20px;">
+        <button class="btn w-100 d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#menuDescarga" aria-expanded="false" style="background: white; color: #333; border: 1px solid #2563eb; font-size: 13px;">
+            Selecciona secciones <span style="color:#2563eb;">▼</span>
+        </button>
+        <div class="collapse mt-1" id="menuDescarga">
+            <div class="card card-body p-2" style="border-top: 2px solid #2563eb;">
+                <form action="{% url 'pdf' %}" method="GET">
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="check_perfil" value="on" checked><label class="small text-dark">Perfil</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="check_experiencia" value="on" checked><label class="small text-dark">Experiencia</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="check_formacion" value="on" checked><label class="small text-dark">Formación</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="check_cursos" value="on" checked><label class="small text-dark">Cursos</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" name="check_venta" value="on" checked><label class="small text-dark">Ventas Garage</label></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-sm fw-bold">🖨 Imprimir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div style="padding: 0 15px; margin-top: 5px;">
+        <a href="/admin" target="_blank" class="btn btn-warning w-100 btn-sm fw-bold" style="color: #333;">⚙️ Panel Admin</a>
+    </div>
 </div>
 
 <div class="content">
-
-    <h3 class="mb-4">Formación Académica</h3>
-
-    <!-- Bachillerato -->
-    <div class="card p-4 mb-3">
-        <div class="d-flex justify-content-between">
-            <h5>Bachiller Técnico en Mecánica Automotriz</h5>
-            <span class="badge-edu">2019 - 2022</span>
+    <h3>Formación Académica</h3>
+    
+    <ul class="list-group mt-3">
+        {% for e in estudios %}
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-1">{{ e.titulo }}</h5>
+                <small class="text-muted">{{ e.fecha }}</small>
+            </div>
+            <p class="mb-1 fw-bold text-primary">{{ e.institucion }}</p>
+            <p class="mb-0 text-muted">{{ e.descripcion }}</p>
+        </li>
+        {% empty %}
+        <div class="alert alert-info">
+            No hay información académica registrada aún. ¡Ve al Panel Admin para agregarla!
         </div>
-        <p class="mb-1"><b>Unidad Educativa:</b> Colegio Luis Arboleda Martínez</p>
-        <p class="mb-1"><b>Ciudad:</b> Manta, Ecuador</p>
-        <p>
-            Formación técnica orientada al diagnóstico, mantenimiento y reparación de motores,
-            sistemas eléctricos, frenos y suspensión de vehículos livianos.
-        </p>
-
-        <!-- BOTÓN AL TÍTULO -->
-       <a href="{% static 'Certificado Titulo.pdf' %}" target="_blank" class="btn btn-primary mt-2">
-            Ver Título de Bachiller
-        </a>
-    </div>
-
-    <!-- Universidad -->
-    <div class="card p-4 mb-3">
-        <div class="d-flex justify-content-between">
-            <h5>Ingeniería en Tecnologías de la Información</h5>
-            <span class="badge-edu">En curso</span>
-        </div>
-        <p class="mb-1"><b>Universidad:</b> ULEAM</p>
-        <p class="mb-1"><b>Ciudad:</b> Manta, Ecuador</p>
-        <p>
-            Formación en desarrollo de software, bases de datos, redes, ciberseguridad
-            y gestión de sistemas de información.
-        </p>
-    </div>
-
+        {% endfor %}
+    </ul>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
