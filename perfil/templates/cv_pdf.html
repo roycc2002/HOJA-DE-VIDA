@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page { size: A4; margin: 1cm; }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #333; line-height: 1.5; }
+        
+        .header-table { width: 100%; border-bottom: 2px solid #2563eb; padding-bottom: 10px; margin-bottom: 20px; }
+        .name { font-size: 24px; color: #1f2933; font-weight: bold; text-transform: uppercase; }
+        .subname { font-size: 14px; color: #2563eb; margin-top: 5px; }
+        .profile-img { width: 110px; height: 110px; border-radius: 50%; }
+        
+        h2 { color: #2563eb; font-size: 16px; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 20px; text-transform: uppercase; }
+        
+        .info-table { width: 100%; margin-bottom: 10px; }
+        .label { font-weight: bold; color: #555; font-size: 10px; }
+        .value { font-size: 12px; margin-bottom: 5px; }
+        .cert-table { width: 100%; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    {% if ver_perfil %}
+    <table class="header-table">
+        <tr>
+            <td width="75%" valign="top">
+                <div class="name">JUAN ROY CEDEÑO</div>
+                <div class="subname">Estudiante de Ingeniería TI</div>
+                <p style="color:#666; font-size:11px; margin-top:10px;">Responsable, creativo y con ganas de aprender.</p>
+            </td>
+            <td width="25%" align="right" valign="top">
+                <img src="{% static 'foto.jpg' %}" class="profile-img">
+            </td>
+        </tr>
+    </table>
+
+    <h2>Información Personal</h2>
+    <table class="info-table">
+        <tr>
+            <td><span class="label">CÉDULA:</span><br><span class="value">1317202941</span></td>
+            <td><span class="label">NACIMIENTO:</span><br><span class="value">16/09/2002</span></td>
+            <td><span class="label">LICENCIA:</span><br><span class="value">Tipo B</span></td>
+        </tr>
+        <tr>
+            <td><span class="label">UBICACIÓN:</span><br><span class="value">Manta, Ecuador</span></td>
+            <td><span class="label">TELÉFONO:</span><br><span class="value">0988159281</span></td>
+            <td><span class="label">EMAIL:</span><br><span class="value">ecuador200216@gmail.com</span></td>
+        </tr>
+    </table>
+    {% endif %}
+
+    {% if ver_formacion %}
+    <h2>Formación Académica</h2>
+    <p><strong>Tecnología de la Información</strong> — ULEAM</p>
+    {% endif %}
+
+    {% if ver_experiencia %}
+    <h2>Experiencia</h2>
+    <ul>
+        <li><strong>Técnico en Mecánica Automotriz</strong> - Colegio “Luis Arboleda Martínez”</li>
+        <li><strong>Prácticas Académicas</strong> - Talleres y simulaciones.</li>
+    </ul>
+    {% endif %}
+
+    {% if certificados %}
+        <pdf:nextpage />
+        <h2>Certificaciones</h2>
+        <table class="cert-table">
+            {% for c in certificados %}
+            <tr>
+                <td style="width: 60%; padding-bottom: 20px;">
+                    <div style="font-weight: bold;">{{ c.titulo }}</div>
+                    <div style="color:#666;">{{ c.institucion }}</div>
+                    <div style="color:#888; font-size: 10px;">{{ c.fecha }}</div>
+                </td>
+                <td style="width: 40%; text-align: right;">
+                    {% if c.imagen %}<img src="{{ c.imagen.url }}" style="width: 120px; height: 80px;">{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if productos %}
+        <pdf:nextpage />
+        <h2>Venta de Garaje</h2>
+        <table class="cert-table">
+            {% for p in productos %}
+            <tr>
+                <td style="width: 70%; padding-bottom: 10px;">
+                    <div style="font-weight: bold;">{{ p.nombre }}</div>
+                    <div style="color:#2563eb;">Precio: ${{ p.precio }}</div>
+                </td>
+                <td style="width: 30%; text-align: right;">
+                    {% if p.imagen %}<img src="{{ p.imagen.url }}" style="width: 80px; height: 80px;">{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+</body>
+</html>

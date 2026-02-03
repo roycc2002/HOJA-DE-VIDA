@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Experiencia Laboral</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background:#f4f6f9; }
+        .sidebar {
+            width: 230px;
+            background:#1f2933;
+            min-height:100vh;
+            position:fixed;
+            color:white;
+        }
+        .sidebar a {
+            color:#cbd5e1;
+            display:block;
+            padding:10px 15px;
+            text-decoration:none;
+        }
+        .sidebar a:hover { background:#2563eb; color:white; }
+        .content { margin-left:250px; padding:20px; }
+        .card { border-radius:15px; }
+        .badge-job {
+            background:#f59e0b;
+            padding:6px 12px;
+            border-radius:20px;
+            color:white;
+            font-size:12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h4 class="text-center mt-3">HOJA DE VIDA</h4>
+    <a href="{% url 'home' %}">Inicio</a>
+    <a href="{% url 'experiencia' %}">Experiencia</a>
+    <a href="{% url 'cursos' %}">Cursos</a>
+    <a href="{% url 'academicos' %}">Académicos</a>
+    <a href="{% url 'laborales' %}">Laborales</a>
+   <a href="{% url 'venta_garaje' %}">Venta de Garaje</a>
+    <a href="{% url 'pdf' %}" class="btn btn-success m-2">DESCARGAR PDF</a>
+  
+
+</div>
+
+<div class="content">
+    <h3 class="mb-4">Experiencia Laboral</h3>
+
+    <div class="card p-4 mb-3">
+        <div class="d-flex justify-content-between">
+            <h5>Asistente de Soporte Técnico</h5>
+            <span class="badge-job">Prácticas</span>
+        </div>
+        <p><b>Área:</b> Tecnologías de la Información</p>
+        <p>
+            Apoyo en mantenimiento de equipos, soporte a usuarios,
+            instalación de software y respaldo de información.
+        </p>
+        <ul>
+            <li>Soporte a computadoras de escritorio y laptops.</li>
+            <li>Instalación de sistemas operativos y programas.</li>
+            <li>Configuración básica de redes.</li>
+            <li>Respaldo de datos.</li>
+        </ul>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <div class="d-flex justify-content-between">
+            <h5>Desarrollador Web Junior</h5>
+            <span class="badge-job">Proyecto Académico</span>
+        </div>
+        <p><b>Área:</b> Desarrollo de Software</p>
+        <p>
+            Desarrollo de aplicaciones web usando Python y Django
+            para gestión de información.
+        </p>
+        <ul>
+            <li>Creación de formularios web.</li>
+            <li>Conexión con bases de datos.</li>
+            <li>Diseño con Bootstrap.</li>
+            <li>Pruebas y corrección de errores.</li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
+

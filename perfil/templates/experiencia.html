@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Experiencia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background:#f4f6f9; }
+        .sidebar {
+            width: 230px;
+            background:#1f2933;
+            min-height:100vh;
+            position:fixed;
+            color:white;
+        }
+        .sidebar a {
+            color:#cbd5e1;
+            display:block;
+            padding:10px 15px;
+            text-decoration:none;
+        }
+        .sidebar a:hover { background:#2563eb; color:white; }
+        .content { margin-left:250px; padding:20px; }
+        .card { border-radius:15px; }
+        .badge-exp {
+            background:#22c55e;
+            padding:6px 12px;
+            border-radius:20px;
+            color:white;
+            font-size:12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h4 class="text-center mt-3">HOJA DE VIDA</h4>
+    <a href="{% url 'home' %}">Inicio</a>
+    <a href="{% url 'experiencia' %}">Experiencia</a>
+    <a href="{% url 'cursos' %}">Cursos</a>
+    <a href="{% url 'academicos' %}">Académicos</a>
+    <a href="{% url 'laborales' %}">Laborales</a>
+    <a href="{% url 'venta_garaje' %}">Venta de Garaje</a>
+    <a href="{% url 'pdf' %}" class="btn btn-success m-2">DESCARGAR PDF</a>
+    
+
+</div>
+
+<div class="content">
+    <h3 class="mb-4">Experiencia</h3>
+
+    <div class="card p-4 mb-3">
+        <div class="d-flex justify-content-between">
+            <h5>Soporte Técnico y Desarrollo Básico</h5>
+            <span class="badge-exp">2024 - Presente</span>
+        </div>
+
+        <p><b>Área:</b> Tecnologías de la Información</p>
+        <p>
+            Experiencia práctica en instalación de sistemas, mantenimiento de computadoras,
+            soporte a usuarios, gestión básica de redes y desarrollo de aplicaciones web
+            usando Python y Django.
+        </p>
+
+        <ul>
+            <li>Instalación y configuración de Windows y Linux.</li>
+            <li>Mantenimiento preventivo y correctivo de equipos.</li>
+            <li>Desarrollo de sistemas web con Django.</li>
+            <li>Manejo de bases de datos (MySQL, SQLite).</li>
+            <li>Soporte técnico a usuarios.</li>
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>
+
